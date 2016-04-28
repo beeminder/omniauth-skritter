@@ -31,10 +31,14 @@ module OmniAuth
         @raw_info ||= { } 
       end
 
+      # Bugfix for regression introduced after omniauth-oauth2 v1.3.1
+      # details: https://github.com/intridea/omniauth-oauth2/issues/81
+      def callback_url
+        options[:callback_url] || (full_host + script_name + callback_path)
+      end
       protected
       # v1.1.2
       def build_access_token
-  puts "build access token"
         params = {
           :redirect_uri => callback_url,
           :headers => { "Authorization" => "Basic " +
